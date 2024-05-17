@@ -35,10 +35,10 @@ public class UserController {
 	public ResponseEntity<User> findByUserName(@PathVariable String username) {
 		User user = userRepository.findByUsername(username);
 		if (user == null) {
-			log.warn("WARNING. User " + username + " not found.");
+			log.warn("FIND_USER_WARNING. User " + username + " not found.");
 		}
 		else {
-			log.info("SUCCESS. Found user " + username);
+			log.info("FIND_USER_SUCCESS. Found user " + username);
 		}
 		return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
 	}
@@ -47,7 +47,7 @@ public class UserController {
 	public ResponseEntity<User> createUser(@RequestBody CreateUserRequest createUserRequest) {
 		User user = new User();
 		user.setUsername(createUserRequest.getUsername());
-		log.info("Username set with ", createUserRequest.getUsername());
+		log.info("Username set with " + createUserRequest.getUsername());
 		Cart cart = new Cart();
 		cartRepository.save(cart);
 		user.setCart(cart);
@@ -55,12 +55,12 @@ public class UserController {
 				!createUserRequest.getPassword().equals(createUserRequest.getConfirmPassword())){
 			//System.out.println("Error - Either length is less than 7 or pass and conf pass do not match. Unable to create ",
 			//		createUserRequest.getUsername());
-			log.error("FAILURE. Failed to create user. Either password is too short or not match.");
+			log.error("CREATE_USER_FAILURE. Failed to create user. Either password is too short or not match.");
 			return ResponseEntity.badRequest().build();
 		}
 		user.setPassword(bCryptPasswordEncoder.encode(createUserRequest.getPassword()));
 		userRepository.save(user);
-		log.info("SUCCESS. Created user " + user.getUsername() + " successfully.");
+		log.info("CREATE_USER_SUCCESS. Created user " + user.getUsername() + " successfully.");
 		return ResponseEntity.ok(user);
 	}
 

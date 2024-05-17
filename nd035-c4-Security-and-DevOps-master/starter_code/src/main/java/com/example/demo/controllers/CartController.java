@@ -38,19 +38,19 @@ public class CartController {
 	public ResponseEntity<Cart> addTocart(@RequestBody ModifyCartRequest request) {
 		User user = userRepository.findByUsername(request.getUsername());
 		if(user == null) {
-			log.error("FAILURE. User " + request.getUsername() + " not found");
+			log.error("ADD_TO_CART_FAILURE. User " + request.getUsername() + " not found");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 		Optional<Item> item = itemRepository.findById(request.getItemId());
 		if(!item.isPresent()) {
-			log.error("FAILURE. ItemId " + request.getItemId() + "not found");
+			log.error("ADD_TO_CART_FAILURE. ItemId " + request.getItemId() + "not found");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 		Cart cart = user.getCart();
 		IntStream.range(0, request.getQuantity())
 			.forEach(i -> cart.addItem(item.get()));
 		cartRepository.save(cart);
-		log.info("SUCCESS. Item added to cart");
+		log.info("ADD_TO_CART_SUCCESS. Item added to cart");
 		return ResponseEntity.ok(cart);
 	}
 	
@@ -58,19 +58,19 @@ public class CartController {
 	public ResponseEntity<Cart> removeFromcart(@RequestBody ModifyCartRequest request) {
 		User user = userRepository.findByUsername(request.getUsername());
 		if(user == null) {
-			log.error("FAILURE. User " + request.getUsername() + " not found");
+			log.error("REMOVE_FROM_CART_FAILURE. User " + request.getUsername() + " not found");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 		Optional<Item> item = itemRepository.findById(request.getItemId());
 		if(!item.isPresent()) {
-			log.error("FAILURE. ItemId " + request.getItemId() + "not found");
+			log.error("REMOVE_FROM_CART_FAILURE. ItemId " + request.getItemId() + "not found");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 		Cart cart = user.getCart();
 		IntStream.range(0, request.getQuantity())
 			.forEach(i -> cart.removeItem(item.get()));
 		cartRepository.save(cart);
-		log.info("SUCCESS. Item removed from cart");
+		log.info("REMOVE_FROM_CART_SUCCESS. Item removed from cart");
 		return ResponseEntity.ok(cart);
 	}
 		
